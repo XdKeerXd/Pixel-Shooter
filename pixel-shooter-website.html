@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pixel Shooter - Retro Gaming Experience</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Press Start 2P', cursive;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a3e 50%, #0f0f23 100%);
+            min-height: 100vh;
+            color: #00ff41;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        /* Animated pixel stars background */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            box-shadow: 0 0 10px rgba(255,255,255,0.5);
+            animation: twinkle 3s infinite;
+        }
+        
+        @keyframes twinkle {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; }
+        }
+        
+        /* Scanline effect */
+        .scanlines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                transparent 50%,
+                rgba(0, 255, 65, 0.03) 50%
+            );
+            background-size: 100% 4px;
+            pointer-events: none;
+            animation: scan 8s linear infinite;
+        }
+        
+        @keyframes scan {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(10px); }
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        header {
+            text-align: center;
+            padding: 40px 0;
+            position: relative;
+        }
+        
+        .logo {
+            font-size: 3em;
+            color: #00ff41;
+            text-shadow: 
+                0 0 10px #00ff41,
+                0 0 20px #00ff41,
+                0 0 30px #00ff41,
+                3px 3px 0 #008f11;
+            animation: glow 2s ease-in-out infinite alternate;
+            margin-bottom: 20px;
+            letter-spacing: 3px;
+        }
+        
+        @keyframes glow {
+            from { text-shadow: 
+                0 0 10px #00ff41,
+                0 0 20px #00ff41,
+                0 0 30px #00ff41,
+                3px 3px 0 #008f11; }
+            to { text-shadow: 
+                0 0 20px #00ff41,
+                0 0 30px #00ff41,
+                0 0 40px #00ff41,
+                3px 3px 0 #008f11; }
+        }
+        
+        .pixel-box {
+            background: rgba(0, 0, 0, 0.8);
+            border: 3px solid #00ff41;
+            padding: 30px;
+            margin: 20px 0;
+            position: relative;
+            box-shadow: 
+                0 0 20px rgba(0, 255, 65, 0.5),
+                inset 0 0 20px rgba(0, 255, 65, 0.1);
+        }
+        
+        .pixel-box::before {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: -3px;
+            right: -3px;
+            bottom: -3px;
+            background: linear-gradient(45deg, #00ff41, #008f11, #00ff41);
+            z-index: -1;
+            animation: borderGlow 3s linear infinite;
+        }
+        
+        @keyframes borderGlow {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+        
+        .game-info {
+            text-align: center;
+            line-height: 2;
+        }
+        
+        .game-info h2 {
+            color: #ffff00;
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            animation: pulse 1s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .feature-card {
+            background: rgba(0, 255, 65, 0.1);
+            border: 2px solid #00ff41;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: -100%;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(transparent, rgba(0, 255, 65, 0.3), transparent);
+            transition: top 0.5s;
+        }
+        
+        .feature-card:hover::before {
+            top: 100%;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 255, 65, 0.5);
+        }
+        
+        .feature-icon {
+            font-size: 2em;
+            margin-bottom: 15px;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .download-section {
+            text-align: center;
+            margin: 40px 0;
+        }
+        
+        .download-btn {
+            display: inline-block;
+            background: linear-gradient(45deg, #00ff41, #00cc33);
+            color: #000;
+            padding: 20px 40px;
+            text-decoration: none;
+            font-size: 1.2em;
+            border: 3px solid #00ff41;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            animation: btnPulse 2s infinite;
+        }
+        
+        @keyframes btnPulse {
+            0%, 100% { box-shadow: 0 0 20px rgba(0, 255, 65, 0.5); }
+            50% { box-shadow: 0 0 40px rgba(0, 255, 65, 0.8); }
+        }
+        
+        .download-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s;
+        }
+        
+        .download-btn:hover::before {
+            left: 100%;
+        }
+        
+        .download-btn:hover {
+            transform: scale(1.1);
+            background: linear-gradient(45deg, #00ff41, #00ff88);
+            box-shadow: 0 0 50px rgba(0, 255, 65, 1);
+        }
+        
+        .developer-credit {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            border-top: 2px solid #00ff41;
+            color: #ffff00;
+            font-size: 0.9em;
+        }
+        
+        .developer-credit a {
+            color: #00ff41;
+            text-decoration: none;
+        }
+        
+        .instructions {
+            background: rgba(255, 255, 0, 0.1);
+            border: 2px dashed #ffff00;
+            padding: 20px;
+            margin: 30px 0;
+        }
+        
+        .instructions h3 {
+            color: #ffff00;
+            margin-bottom: 15px;
+        }
+        
+        .instructions ol {
+            list-style: none;
+            counter-reset: step;
+            padding-left: 0;
+        }
+        
+        .instructions li {
+            counter-increment: step;
+            margin: 15px 0;
+            position: relative;
+            padding-left: 40px;
+            font-size: 0.8em;
+            line-height: 1.8;
+        }
+        
+        .instructions li::before {
+            content: counter(step);
+            position: absolute;
+            left: 0;
+            top: 0;
+            background: #ffff00;
+            color: #000;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        .retro-text {
+            color: #ff00ff;
+            text-shadow: 2px 2px 0 #8800ff;
+            animation: retroBlink 0.5s infinite;
+        }
+        
+        @keyframes retroBlink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+        
+        @media (max-width: 768px) {
+            .logo {
+                font-size: 2em;
+            }
+            
+            .download-btn {
+                font-size: 0.9em;
+                padding: 15px 30px;
+            }
+            
+            .feature-card {
+                font-size: 0.8em;
+            }
+            
+            .instructions li {
+                font-size: 0.7em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="stars" id="stars"></div>
+    <div class="scanlines"></div>
+    
+    <div class="container">
+        <header>
+            <h1 class="logo">PIXEL SHOOTER</h1>
+            <p style="color: #ffff00; font-size: 0.8em; margin-top: 10px;">
+                ULTIMATE RETRO GAMING EXPERIENCE
+            </p>
+        </header>
+        
+        <div class="pixel-box">
+            <div class="game-info">
+                <h2>READY TO PLAY?</h2>
+                <p style="color: #00ff41; font-size: 0.9em; line-height: 2;">
+                    Jump into the pixelated battlefield!<br>
+                    Experience intense shooting action<br>
+                    with retro-style graphics
+                </p>
+            </div>
+        </div>
+        
+        <div class="features">
+            <div class="feature-card">
+                <div class="feature-icon">🎮</div>
+                <h3 style="color: #ffff00; margin-bottom: 10px;">CLASSIC GAMEPLAY</h3>
+                <p style="font-size: 0.7em; line-height: 1.8;">
+                    Nostalgic pixel art style with modern mechanics
+                </p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🚀</div>
+                <h3 style="color: #ffff00; margin-bottom: 10px;">ACTION PACKED</h3>
+                <p style="font-size: 0.7em; line-height: 1.8;">
+                    Fast-paced shooting with endless excitement
+                </p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🏆</div>
+                <h3 style="color: #ffff00; margin-bottom: 10px;">CHALLENGES</h3>
+                <p style="font-size: 0.7em; line-height: 1.8;">
+                    Multiple levels and achievements to unlock
+                </p>
+            </div>
+        </div>
+        
+        <div class="instructions">
+            <h3>INSTALLATION GUIDE</h3>
+            <ol>
+                <li>Click the download button below</li>
+                <li>Allow downloads from browser if prompted</li>
+                <li>Open the APK file when download completes</li>
+                <li>Enable "Install from Unknown Sources" if needed</li>
+                <li>Follow on-screen installation instructions</li>
+                <li>Launch and enjoy the game!</li>
+            </ol>
+        </div>
+        
+        <div class="download-section">
+            <a href="https://www.dropbox.com/scl/fi/kf1m1emfwuqrxuyrwi63l/Pixel-Shooter.apk?rlkey=o2kkz67krj5ub9ibrj6t3gln0&st=jon7489b&dl=1" 
+               class="download-btn">
+                DOWNLOAD APK
+            </a>
+            <p style="margin-top: 20px; font-size: 0.7em; color: #ffff00;">
+                Android APK • Free to Play
+            </p>
+        </div>
+        
+        <div class="developer-credit">
+            <p>DEVELOPED BY</p>
+            <p style="font-size: 1.2em; margin-top: 10px;" class="retro-text">
+                AHMED JABALLAH
+            </p>
+            <p style="margin-top: 15px; font-size: 0.7em; color: #00ff41;">
+                © 2024 All Rights Reserved
+            </p>
+        </div>
+    </div>
+    
+    <script>
+        // Generate random stars
+        const starsContainer = document.getElementById('stars');
+        for (let i = 0; i < 100; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 100 + '%';
+            star.style.animationDelay = Math.random() * 3 + 's';
+            starsContainer.appendChild(star);
+        }
+        
+        // Add glitch effect on hover
+        document.querySelector('.logo').addEventListener('mouseenter', function() {
+            this.style.animation = 'glow 0.1s ease-in-out infinite alternate';
+        });
+        
+        document.querySelector('.logo').addEventListener('mouseleave', function() {
+            this.style.animation = 'glow 2s ease-in-out infinite alternate';
+        });
+    </script>
+</body>
+</html>
