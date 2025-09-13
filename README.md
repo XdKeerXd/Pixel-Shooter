@@ -1,2 +1,2 @@
 # Pixel-Shooter
-2D Fight Game
+2D Fighting Online Game
